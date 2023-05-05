@@ -55,7 +55,7 @@
         }
 
         function randomUuid() {
-            const id = Crypto.randomUUID();
+            const id = window.crypto.randomUUID();
             document.getElementById("uuidoutput").innerHTML = id;
             navigator.clipboard.writeText(id);
         }
