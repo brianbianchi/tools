@@ -1,83 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tools</title>
 </head>
+
 <body>
     <h2>Decode JWT payload</h2>
-    <form onsubmit="decode(event)">
-        <label for="jwtinput">Enter a JWT:</label>
-        <textarea type="text" id="jwtinput" name="jwtinput" rows="4" cols="40"></textarea>
-        <br><br>
-        <input type="submit" value="Decode">
-    </form>
-    <br>
+    <label for="jwtinput">Enter a JWT:</label><br>
+    <textarea type="text" id="jwtinput" name="jwtinput" rows="4" cols="40"></textarea>
+    <br><br>
+    <input type="submit" value="Decode" onclick="decode()" />
+    <input type="button" value="Copy" id="copyDecodedJwtBtn" onclick="copyDecodedJwt()" disabled />
     <p id="jwtoutput"></p>
-
-    <h2>Generate random Id</h2>
-    <input type="submit" value="Create UUID & copy" onclick="randomUuid()">
-    <p id="uuidoutput"></p>
-
-    <form onsubmit="randomId(event)">
-        <label for="leninput">Enter length of base62 Id:</label>
-        <input type="number" id="leninput" name="leninput"><br><br>
-        <input type="submit" value="Create base62 Id & copy">
-    </form>
     <br>
+
+    <h2>Generate UUID</h2>
+    <input type="submit" value="Generate" onclick="randomUuid()" />
+    <input type="button" value="Copy" id="copyUuidBtn" onclick="copyUuid()" disabled />
+    <p id="uuidoutput"></p>
+    <br>
+
+    <h2>Generate base62 Id</h2>
+    <label for="leninput">Length:</label>
+    <input type="number" id="leninput" name="leninput" />
+    <br><br>
+    <input type="submit" value="Generate" onclick="randomId()" />
+    <input type="button" value="Copy" id="copyIdBtn" onclick="copyId()" disabled />
     <p id="idoutput"></p>
-    <script>
-        document.getElementById("jwtinput").value =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+    <br>
 
-        document.getElementById("leninput").value = 10;
-
-        function decode(event) {
-            event.preventDefault();
-            const input = document.getElementById("jwtinput").value;
-            try {
-                const token = parseJwt(input);
-                const formattedToken = JSON.stringify(token, null, 4);
-                document.getElementById("jwtoutput").innerHTML = formattedToken;
-            } catch {
-                document.getElementById("jwtoutput").innerHTML = "Failed to decode JWT.";
-            }
-        }
-
-        function parseJwt(token) {
-            const base64Url = token.split('.')[1];
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-            return JSON.parse(jsonPayload);
-        }
-
-        function randomUuid() {
-            const id = window.crypto.randomUUID();
-            document.getElementById("uuidoutput").innerHTML = id;
-            navigator.clipboard.writeText(id);
-        }
-
-        function makeId(length) {
-            let result = '';
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            const charactersLength = characters.length;
-            for (let i = 0; i < length; i++) {
-                result += characters.charAt(Math.floor(Math.random() * charactersLength));
-            }
-            return result;
-        }
-
-        function randomId(event) {
-            event.preventDefault();
-            const input = document.getElementById("leninput").value;
-            const id = makeId(input);
-            document.getElementById("idoutput").innerHTML = id;
-            navigator.clipboard.writeText(id);
-        }
-    </script>
+    <script src="index.js"></script>
 </body>
 
 </html>
